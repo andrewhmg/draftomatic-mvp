@@ -56,6 +56,11 @@ sub = doc.add_paragraph()
 r = sub.add_run('IS 581 · Week 4 · Andrew Hogge')
 r.font.size = Pt(11)
 r.font.color.rgb = RGBColor(0x66, 0x66, 0x66)
+link = doc.add_paragraph()
+r = link.add_run('Live working demo (use it directly): ')
+r.bold = True
+r2 = link.add_run('https://draftomatic-mvp.vercel.app')
+r2.font.color.rgb = RGBColor(0x1a, 0x56, 0xdb)
 
 h('What Draftomatic is', 1)
 p('Draftomatic is the autopilot blog for small-business websites, built exactly to the scope '
