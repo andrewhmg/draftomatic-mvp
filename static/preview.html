@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Draftomatic — Preview</title>
+<link rel="stylesheet" href="/style.css">
+<script>
+async function api(path, body) {
+  const res = await fetch(path, {method: body ? 'POST' : 'GET',
+    headers: {'Content-Type': 'application/json'},
+    body: body ? JSON.stringify(body) : undefined});
+  return res.json();
+}
+let ART = null;
+async function refresh() {
+  const s = await api('/api/state');
+  const arts = s.articles || [];
+  if (!arts.length) {
+    document.getElementById('main').innerHTML =
+      '<div class="card"><p>No drafts yet. Approve topics first.</p><a class="btn" href="/topics">Go to Topics →</a></div>';
+    return;
+  }
+  const id = parseInt(new URLSearchParams(location.search).get('id')) || arts[arts.length - 1].id;
+  ART = arts.find(a => a.id === id) || arts[arts.length - 1];
+  const pub = (s.published || []).find(p => p.article_id === ART.id);
+  const pubbed = ART.published || pub;
+  const log = (s.statuslog || []).filter(l => l.article_id === ART.id).slice(-1)[0];
+  let pill = '<span class="pill warn">DRAFT</span>';
+  if (pubbed) pill = `<span class="pill ok">PUBLISHED</span> ${pubbed.demo ? '<span class="pill demo">demo mode</span>' : ''}`;
+  else if (log && log.status === 'failed') pill = '<span class="pill fail">PUBLISH FAILED</span>';
+  const links = arts.map(a =>
+    `<a href="/preview?id=${a.id}" style="${a.id === ART.id ? 'font-weight:700' : ''}">${a.title.slice(0, 38)}…</a>`).join('<br>');
+  document.getElementById('main').innerHTML = `
+    <h1>${ART.title} ${pill}</h1>
+    <p class="sub">${ART.word_count} words · slug: <code>/${ART.slug}</code> · variation ${ART.variation}</p>
+    <div class="card">
+      <label>Meta title (SEO)</label><div class="meta" style="margin-top:0">${ART.meta_title}</div>
+      <label>Meta description</label><div class="meta" style="margin-top:0">${ART.meta_description}</div>
+    </div>
+    <div class="card"><div id="cover"></div></div>
+    <div class="card" id="body">${ART.body_html}</div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap">
+      ${pubbed ? '' : `<button class="btn" onclick="pub()">✓ Approve &amp; publish to Framer</button>`}
+      <button class="btn secondary" onclick="regen()">↻ Regenerate draft</button>
+    </div>
+    <div class="meta">Autopilot: ${s.autopilot ? 'ON — auto-approves and publishes on schedule' : 'PAUSED — nothing publishes until you turn it back on (Dashboard)'}</div>
+    <p class="steps">Drafts sidebar:<br>${links}</p>`;
+  const img = new Image();
+  const ad = await api('/api/article/' + ART.id);  // server generates the cover on demand
+  img.src = ART.cover || ad.cover || '';
+  img.style.maxWidth = '100%';
+  img.alt = 'cover preview';
+  document.getElementById('cover').appendChild(img);
+}
+async function pub() {
+  const r = await api('/api/publish', {article_id: ART.id});
+  refresh();
+}
+async function regen() {
+  const r = await api('/api/regenerate', {article_id: ART.id});
+  refresh();
+}
+window.onload = refresh;
+</script>
+</head>
+<body>
+<div class="nav">
+  <span class="brand">DRAFTOMATIC</span>
+  <a href="/">Connect</a><a href="/topics">Topics</a>
+  <a class="active" href="/preview">Preview</a><a href="/dashboard">Dashboard</a>
+</div>
+<div class="wrap"><div id="main">Loading…</div></div>
+</body>
+</html>

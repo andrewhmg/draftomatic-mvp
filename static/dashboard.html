@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Draftomatic — Dashboard</title>
+<link rel="stylesheet" href="/style.css">
+<script>
+async function api(path, body) {
+  const res = await fetch(path, {method: body ? 'POST' : 'GET',
+    headers: {'Content-Type': 'application/json'},
+    body: body ? JSON.stringify(body) : undefined});
+  return res.json();
+}
+async function refresh() {
+  const s = await api('/api/state');
+  const pub = s.published || [];
+  const log = s.statuslog || [];
+  document.getElementById('autopilot').innerHTML = `
+    <label>Autopilot (auto-approve on schedule)</label>
+    <div class="toggle">
+      <input type="checkbox" id="ap" ${s.autopilot ? 'checked' : ''} onchange="setAP(this.checked)">
+      <span>${s.autopilot ? 'ON — drafts publish automatically on the weekly schedule' : 'PAUSED — nothing publishes until you resume'}</span>
+    </div>
+    <p class="steps">This is the toggle that tests our core assumption: owners leave autopilot on.</p>`;
+  document.getElementById('publist').innerHTML = pub.length ? `
+    <table><tr><th>Article</th><th>Slug</th><th>Image</th><th>When</th></tr>
+    ${pub.map(p => `<tr><td><b>${p.title}</b></td><td><code>/${p.slug}</code></td>
+      <td>${p.image ? `<a href="${p.image}">cover ↗</a>` : '—'}</td><td>${p.publishedAt.slice(0, 16).replace('T', ' ')}</td></tr>`).join('')}
+    </table>` : '<p class="meta">Nothing published yet — approve a draft on the Preview screen.</p>';
+  document.getElementById('log').innerHTML = log.length ? `
+    <table><tr><th>Status</th><th>Article</th><th>Attempt</th><th>When</th><th></th></tr>
+    ${log.map(l => `<tr><td><span class="pill ${l.status.startsWith('published') ? 'ok' : 'fail'}">${l.status}${l.demo ? ' (demo)' : ''}</span></td>
+      <td>${l.title}</td><td>#${l.attempt}</td><td>${l.at.slice(0, 16).replace('T', ' ')}</td>
+      <td>${l.status === 'failed' ? `<button class="btn secondary" onclick="retry(${l.article_id})">Retry</button>` : ''}</td></tr>`).join('')}
+    </table>` : '<p class="meta">No publish attempts yet.</p>';
+}
+async function setAP(on) { await api('/api/autopilot', {on}); refresh(); }
+async function retry(id) { await api('/api/publish/retry', {article_id: id}); refresh(); }
+window.onload = refresh;
+</script>
+</head>
+<body>
+<div class="nav">
+  <span class="brand">DRAFTOMATIC</span>
+  <a href="/">Connect</a><a href="/topics">Topics</a>
+  <a href="/preview">Preview</a><a class="active" href="/dashboard">Dashboard</a>
+</div>
+<div class="wrap">
+  <h1>Dashboard</h1>
+  <p class="sub">Published posts, publish status log, autopilot control.</p>
+  <div class="card" id="autopilot">Loading…</div>
+  <div class="card"><h1 style="font-size:18px">Published posts</h1><div id="publist"></div></div>
+  <div class="card"><h1 style="font-size:18px">Status log</h1><div id="log"></div></div>
+</div>
+</body>
+</html>

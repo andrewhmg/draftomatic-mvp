@@ -1,0 +1,10 @@
+{
+  "site": {
+    "name": "Peak Lawn & Landscape",
+    "url": "https://demo.example.com/peak-lawn",
+    "industry": "landscaping"
+  },
+  "owner_email": "owner@peaklawn.demo",
+  "site_content_sample": "Peak Lawn & Landscape provides lawn care, landscaping design, irrigation, tree care, seasonal cleanup, and snow removal for homes and small commercial properties along the Wasatch Front. Family owned since 2011. Licensed and insured.",
+  "demo_note": "Fake company so the demo never depends on a real Framer site. /api/connect with any name/url falls back to this when no live site is reachable."
+}

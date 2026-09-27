@@ -1,0 +1,80 @@
+{
+  "assignment": {
+    "course_id": 36486,
+    "assignment_id": 1460871,
+    "name": "Week 4 Assignment: MVP Development",
+    "due_utc": "2026-09-27T05:59:00Z",
+    "points": 5,
+    "submission_state_checked": true,
+    "submission_state": {
+      "submitted": null,
+      "workflow_state": "unsubmitted",
+      "graded": null,
+      "score": null,
+      "submitted_at": null
+    }
+  },
+  "current_lock": null,
+  "parts": {
+    "P0": {
+      "title": "Scaffold: server.py + store.py + 4 static screens + data/state.json",
+      "status": "done",
+      "claimed_at": null,
+      "note": "verified: server on 8765, /api/health ok, all 4 pages 200 with nav. Had to kill zombie pid 23396 holding 8765-8768 from prior unrecorded run."
+    },
+    "P1": {
+      "title": "Connect stage: /api/connect + industry detection + connect screen",
+      "status": "done",
+      "claimed_at": null,
+      "note": "verified: POST /api/connect -> industry=landscaping (demo-seed fallback), state persists across server restart, connect screen wired to show connected card."
+    },
+    "P2": {
+      "title": "Plan stage: topic generation + approve/edit + topics screen",
+      "status": "done",
+      "claimed_at": null,
+      "note": "verified: 12 topics w/ keywords+priorities; subset approve keeps [1,2]; approve-all; edit works. BUG FIXED: /api/topics/edit now honors 'approved' (screen checkbox was a silent no-op)."
+    },
+    "P3": {
+      "title": "Generate stage: article generator 600-1000 words + regenerate",
+      "status": "done",
+      "claimed_at": null,
+      "note": "verified: generate 631/635 words (>=600), all fields, 7 sections; regenerate variation 1 body differs (691 words); ms-precision ids (collision fix); data/articles/<id>.json persistence added."
+    },
+    "P4": {
+      "title": "Publish stage: framer.py adapter + cover image + status log + retry",
+      "status": "done",
+      "claimed_at": null,
+      "note": "verified: publish -> payload 7-field mapping + cover SVG + statuslog(published-demo); mocked-urllib tests prove failed(attempt1)->published(attempt2) retry and demo retry. Republish dedupe added."
+    },
+    "P5": {
+      "title": "Trust + dashboard: preview screen, autopilot toggle, published list, status log",
+      "status": "done",
+      "claimed_at": null,
+      "note": "verified E2E: connect->12 topics->approve->generate(635w)->publish(published-demo)->state all populated; autopilot OFF persists across real server restart; back ON for demo state."
+    },
+    "P6": {
+      "title": "End-to-end verify + 4 Chrome headless screenshots in screens/",
+      "status": "done",
+      "claimed_at": null,
+      "note": "verified: 4 screenshots in screens/ (connect/topics/preview/dashboard), each visually inspected; full API smoke 20/20; Chrome-on-macOS quirk = one clean capture per process, solved with one fresh process per shot (--user-data-dir per shot, exit 124 harmless: file is written before the hang)."
+    },
+    "P7": {
+      "title": "Submission package: README + SUBMISSION-NOTES + fallback docx in ~/Downloads",
+      "status": "done",
+      "claimed_at": null,
+      "note": "verified: README.md + SUBMISSION-NOTES.md + walkthrough script in mvp-build; 'Draftomatic MVP (Week 4).docx' in ~/Downloads (520KB, 7 headings, 4 embedded screenshots), read back with python-docx."
+    }
+  },
+  "log": [
+    "2026-09-26T17:17:18 \u2014 prior tick left full code tree (server/store/content/framer/cover/topics_gen + 4 screens) with NO state recorded; no live server, dead pid 23396. Decision: verify-and-adopt existing code part by part instead of rebuilding from zero.",
+    "2026-09-26T17:17:45 \u2014 P0 done (scaffold verified live on 8765). P1 claimed: check connect flow + auto-seed.",
+    "2026-09-26T17:18:08 \u2014 P1 done. P2 claimed: topic count/keywords/approve/edit checks.",
+    "2026-09-26T17:19:22 \u2014 P2 done. P3 claimed: pre-fix id precision + data/articles persistence, then word-count checks.",
+    "2026-09-26T17:19:53 \u2014 P3 done. P4 claimed: publish payload+cover+statuslog, forced-failure + retry path.",
+    "2026-09-26T17:20:28 \u2014 P4 done. P5 claimed: E2E connect->approve->generate->publish->dashboard; autopilot persist.",
+    "2026-09-26T17:20:48 \u2014 P5 done. P6 claimed: 4 Chrome headless screenshots + flow verification.",
+    "2026-09-26T17:40:04 \u2014 P6 done (4 shots verified). P7 claimed by orchestrator: README + SUBMISSION-NOTES + shot list + fallback/submit docx in ~/Downloads.",
+    "2026-09-26T17:41:47 \u2014 P7 done. ALL PARTS COMPLETE. Awaiting Canvas submission state check.",
+    "2026-09-26T17:41:47 \u2014 canvas check: {'submitted': None, 'workflow_state': 'unsubmitted', 'graded': None, 'score': None, 'submitted_at': None}"
+  ]
+}

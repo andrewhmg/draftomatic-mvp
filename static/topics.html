@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Draftomatic — Topics</title>
+<link rel="stylesheet" href="/style.css">
+<script>
+async function api(path, body) {
+  const res = await fetch(path, {method: body ? 'POST' : 'GET',
+    headers: {'Content-Type': 'application/json'},
+    body: body ? JSON.stringify(body) : undefined});
+  return res.json();
+}
+let TOPICS = [];
+function render() {
+  const list = document.getElementById('list');
+  if (!TOPICS.length) {
+    list.innerHTML = '<div class="card"><p>No topics yet. Connect a site first, then generate topics.</p>' +
+      '<a class="btn" href="/">Go to Connect →</a></div>';
+    return;
+  }
+  list.innerHTML = TOPICS.map(t => `
+    <div class="checkline">
+      <input type="checkbox" ${t.approved ? 'checked' : ''} onchange="toggle(${t.id}, this.checked)">
+      <div style="flex:1">
+        <b>#${t.priority} ${t.title}</b>
+        <div class="meta">angle: ${t.angle} · keyword: <code>${t.keyword}</code></div>
+      </div>
+      <button class="btn secondary" onclick="editTopic(${t.id})">Edit</button>
+      <button class="btn danger" onclick="del(${t.id})">Delete</button>
+    </div>`).join('');
+}
+async function refresh() { TOPICS = (await api('/api/topics')).topics; render(); }
+async function toggle(id, on) { await api('/api/topics/edit', {id, approved: on}); }
+async function del(id) { await api('/api/topics/delete', {id}); refresh(); }
+async function editTopic(id) {
+  const t = TOPICS.find(x => x.id === id);
+  const title = prompt('Topic title', t.title);
+  if (title == null) return;
+  const keyword = prompt('Target keyword', t.keyword);
+  if (keyword == null) return;
+  await api('/api/topics/edit', {id, title, keyword});
+  refresh();
+}
+async function addTopic() {
+  const title = prompt('New topic title');
+  if (!title) return;
+  await api('/api/topics/add', {title});
+  refresh();
+}
+async function approveAll() {
+  const r = await api('/api/topics/approve', {});
+  document.getElementById('msg').textContent = `${r.approved} topics approved — heading to your first draft`;
+  const arts = TOPICS.filter(t => t.approved);
+  for (const t of arts) await api('/api/generate', {topic_id: t.id});
+  location.href = '/preview';
+}
+async function regenerate() { await api('/api/topics/generate', {}); refresh(); }
+window.onload = refresh;
+</script>
+</head>
+<body>
+<div class="nav">
+  <span class="brand">DRAFTOMATIC</span>
+  <a href="/">Connect</a><a class="active" href="/topics">Topics</a>
+  <a href="/preview">Preview</a><a href="/dashboard">Dashboard</a>
+</div>
+<div class="wrap">
+  <h1>Content plan</h1>
+  <p class="sub">Auto-generated from your site's industry and services. Approve the whole list in one tap, or pick individually. Priority ranking = SEO value.</p>
+  <div style="display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap">
+    <button class="btn" onclick="approveAll()">✓ Approve all &amp; generate first drafts</button>
+    <button class="btn secondary" onclick="regenerate()">↻ Re-plan topics</button>
+    <button class="btn secondary" onclick="addTopic()">+ Add your own</button>
+  </div>
+  <div id="msg" class="meta"></div>
+  <div class="card" id="list">Loading…</div>
+</div>
+</body>
+</html>

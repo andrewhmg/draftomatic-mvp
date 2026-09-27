@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Draftomatic — Connect</title>
+<link rel="stylesheet" href="/style.css">
+<script>
+async function api(path, body) {
+  const res = await fetch(path, {method: body ? 'POST' : 'GET',
+    headers: {'Content-Type': 'application/json'},
+    body: body ? JSON.stringify(body) : undefined});
+  return res.json();
+}
+async function loadState() {
+  const s = await api('/api/state');
+  const c = s.connected;
+  if (c) {
+    document.getElementById('form').style.display = 'none';
+    const d = document.getElementById('connected');
+    d.style.display = 'block';
+    d.innerHTML = `
+      <h1>${c.name}</h1>
+      <p class="sub">Connected site: ${c.url || '(demo site)'} · detected industry: <b>${c.industry}</b></p>
+      <div class="card">
+        <p>✓ Site connected · ✓ ${c.industry} detected from site content · ✓ topics ready to plan</p>
+        <p class="steps">Next: review the auto-generated topic list on the Topics screen, approve, and Draftomatic takes over from there.</p>
+        <a class="btn" href="/topics">Continue to topics →</a>
+      </div>`;
+  }
+}
+async function connect(ev) {
+  ev.preventDefault();
+  const btn = document.getElementById('go');
+  btn.disabled = true; btn.textContent = 'Scanning site…';
+  const name = document.getElementById('name').value.trim() || 'Peak Lawn & Landscape';
+  const url = document.getElementById('url').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const r = await api('/api/connect', {name, url, email});
+  await api('/api/topics/generate', {});
+  await loadState();
+}
+</script>
+</head>
+<body onload="loadState()">
+<div class="nav">
+  <span class="brand">DRAFTOMATIC</span>
+  <a class="active" href="/">Connect</a><a href="/topics">Topics</a>
+  <a href="/preview">Preview</a><a href="/dashboard">Dashboard</a>
+</div>
+<div class="wrap">
+  <h1>Connect your site</h1>
+  <p class="sub">Sign up and connect your Framer site. Draftomatic scans it, detects your industry, and plans your blog on autopilot.</p>
+  <form id="form" onsubmit="connect(event)">
+    <div class="card">
+      <label>Your name</label><input id="name" placeholder="Jane Owner">
+      <label>Email</label><input id="email" type="email" placeholder="jane@example.com">
+      <label>Framer site URL (leave blank to use the demo landscaping company)</label>
+      <input id="url" placeholder="https://your-site.framer.website">
+      <button id="go" class="btn" type="submit">Connect site →</button>
+      <p class="steps">3 steps to autopilot: 1 · connect site → 2 · approve topics → 3 · autopilot publishes weekly.</p>
+    </div>
+  </form>
+  <div id="connected" style="display:none"></div>
+</div>
+</body>
+</html>

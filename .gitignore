@@ -1,0 +1,7 @@
+data/state.json
+data/articles/
+published/
+covers/
+server.log
+__pycache__/
+.DS_Store
