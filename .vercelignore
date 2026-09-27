@@ -1,0 +1,9 @@
+.git
+__pycache__/
+server.log
+server.pid
+tunnel.log
+screens/
+data/articles/
+published/
+covers/

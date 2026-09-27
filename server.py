@@ -159,8 +159,10 @@ def api_generate(s, body, m):
 
 
 def _persist_article(art, remove_id=None):
-    """Persist a generated article to data/articles/<id>.json (SPEC P3)."""
-    d = os.path.join(ROOT, "data", "articles")
+    """Persist a generated article to data/articles/<id>.json (SPEC P3).
+
+    Writable root follows store.data_root() (Vercel: /tmp)."""
+    d = os.path.join(store.data_root(), "data", "articles")
     os.makedirs(d, exist_ok=True)
     if remove_id is not None and remove_id != art["id"]:
         try:
@@ -290,7 +292,8 @@ class Handler(BaseHTTPRequestHandler):
                     return
         safe = path.lstrip("/") or "index.html"
         fpath = None
-        for base, prefix in ((STATIC, ""), (os.path.join(ROOT, "covers"), "covers/")):  # covers/ served for preview images
+        covers_root = os.path.join(store.data_root(), "covers")  # writable root (Vercel: /tmp)
+        for base, prefix in ((STATIC, ""), (covers_root, "covers/")):  # covers/ served for preview images
             rel = safe
             if prefix:
                 if not rel.startswith(prefix):
@@ -306,7 +309,7 @@ class Handler(BaseHTTPRequestHandler):
             if os.path.isfile(cand):
                 fpath = cand
                 break
-        if not fpath or not fpath.startswith((STATIC, os.path.join(ROOT, "covers"))) or not os.path.isfile(fpath):
+        if not fpath or not fpath.startswith((STATIC, covers_root)) or not os.path.isfile(fpath):
             self._send(404, "text/html", b"<h1>404</h1>")
             return
         ext = fpath.rsplit(".", 1)[-1].lower()  # extension of the FILE (pretty URLs like /topics have none)

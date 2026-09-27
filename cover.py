@@ -10,7 +10,16 @@ PALETTES = [
 ]
 
 
+def covers_root():
+    """Writable covers dir (Vercel: /tmp — read-only deploy FS)."""
+    if os.environ.get("VERCEL"):
+        return os.path.join(os.environ.get("TMPDIR", "/tmp"), "drafto-covers")
+    return os.path.join(ROOT, "covers")
+
+
 def generate_cover(title, article_id):
+    root = covers_root()
+    os.makedirs(root, exist_ok=True)
     slug = re.sub(r"[^a-z0-9]+", "-", (title or "cover").lower()).strip("-")[:50] or "cover"
     c1, c2 = PALETTES[article_id % len(PALETTES)]
     t = (title or "Draftomatic").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
@@ -37,7 +46,7 @@ def generate_cover(title, article_id):
   <text x="80" y="120" font-family="Helvetica, Arial, sans-serif" font-size="30" letter-spacing="6" fill="#ffffff" opacity="0.85">DRAFTOMATIC</text>
   <text font-family="Georgia, serif" font-size="44" font-weight="bold" fill="#ffffff">{tspans}</text>
 </svg>'''
-    path = os.path.join(ROOT, "covers", f"{slug}.svg")
+    path = os.path.join(root, f"{slug}.svg")
     with open(path, "w") as f:
         f.write(svg)
     rel = f"/covers/{slug}.svg"

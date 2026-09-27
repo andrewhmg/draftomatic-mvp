@@ -62,7 +62,9 @@ def publish(article, is_retry=False):
             status = "failed"
         demo = False
     else:
-        out = os.path.join(ROOT, "published", f"{payload['slug']}.json")
+        import store
+        out = os.path.join(store.data_root(), "published", f"{payload['slug']}.json")
+        os.makedirs(os.path.dirname(out), exist_ok=True)
         with open(out, "w") as f:
             json.dump({"collection": "Articles", "payload": payload}, f, indent=2)
         status = "published-demo"

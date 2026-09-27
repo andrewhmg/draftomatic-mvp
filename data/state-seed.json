@@ -1,0 +1,29 @@
+{
+  "comment": "Demo state: fake landscaping company so the deployed MVP always shows a working flow without any real Framer site. Reset the demo by redeploying.",
+  "site": {
+    "name": "Peak Lawn & Landscape",
+    "url": "",
+    "industry": "landscaping",
+    "email": "owner@peaklawn.demo"
+  },
+  "connected": {
+    "name": "Peak Lawn & Landscape",
+    "url": "https://demo.example.com/peak-lawn",
+    "industry": "landscaping",
+    "email": "owner@peaklawn.demo",
+    "connected_at": "2026-09-26T17:00:00Z"
+  },
+  "topics": [
+    {"id": 1, "title": "What the work involves for landscaping homeowners", "angle": "how it works, what to expect", "keyword": "landscaping tips", "priority": 1, "approved": true},
+    {"id": 2, "title": "Pricing explained for landscaping homeowners", "angle": "pricing explained: what drives cost", "keyword": "landscaping cost", "priority": 2, "approved": true},
+    {"id": 3, "title": "Mistakes to avoid for landscaping homeowners", "angle": "mistakes homeowners make (and how to avoid them)", "keyword": "landscaping guide", "priority": 3, "approved": false},
+    {"id": 4, "title": "Seasonal tips for landscaping homeowners", "angle": "seasonal tips from our crew", "keyword": "landscaping checklist", "priority": 4, "approved": false},
+    {"id": 5, "title": "DIY vs hiring a pro for landscaping homeowners", "angle": "DIY vs hiring a pro", "keyword": "landscaping help", "priority": 5, "approved": false}
+  ],
+  "topics_approved": false,
+  "articles": [],
+  "published": [],
+  "statuslog": [],
+  "autopilot": true,
+  "paused": false
+}

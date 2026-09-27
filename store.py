@@ -1,11 +1,21 @@
 """Draftomatic MVP — JSON persistence. Stdlib only."""
-import json, os, threading
+import json
+import os
+import tempfile
+import threading
 
 _LOCK = threading.Lock()
 
 
+def data_root():
+    """Writable root for runtime state. On Vercel (read-only FS) that's /tmp."""
+    if os.environ.get("VERCEL"):
+        return os.path.join(tempfile.gettempdir(), "drafto")
+    return os.path.dirname(os.path.abspath(__file__))
+
+
 def _path():
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "state.json")
+    return os.path.join(data_root(), "data", "state.json")
 
 
 def load():
