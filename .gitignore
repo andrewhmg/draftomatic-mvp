@@ -5,3 +5,4 @@ covers/
 server.log
 __pycache__/
 .DS_Store
+server.pid
