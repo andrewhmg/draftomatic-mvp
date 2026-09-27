@@ -23,8 +23,23 @@ def load():
         with open(_path()) as f:
             return json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
-        return {"connected": None, "topics": [], "articles": [], "published": [],
-                "statuslog": [], "autopilot": True, "paused": False}
+        pass
+    # cold start: seed from the bundled state-seed.json if present
+    here = os.path.dirname(os.path.abspath(__file__))
+    seed = os.path.join(here, "data", "state-seed.json")
+    if os.path.isfile(seed):
+        try:
+            with open(seed) as f:
+                s = json.load(f)
+            try:
+                save(s)
+            except OSError:
+                pass  # read-only FS: serve the seed in-memory this request
+            return s
+        except json.JSONDecodeError:
+            pass
+    return {"connected": None, "topics": [], "articles": [], "published": [],
+            "statuslog": [], "autopilot": True, "paused": False}
 
 
 def save(state):
