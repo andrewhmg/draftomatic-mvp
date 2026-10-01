@@ -34,6 +34,8 @@ def api_connect(s, body, m):
         st["connected"] = {"name": name, "url": url, "industry": industry,
                            "email": email, "connected_at": store_now()}
     store.update(fn)
+    import metrics
+    metrics.log("connect", industry=industry, has_url=bool(url))
     return {"ok": True, "industry": industry, "name": name}
 
 
@@ -85,21 +87,27 @@ def api_topics(s, body, m):
 @route("POST", r"/api/topics/generate")
 def api_topics_generate(s, body, m):
     import topics_gen, llm
+    import time as _time
+    _t0 = _time.time()
     conn = s.get("connected") or {}
     industry = conn.get("industry", "general")
     biz = conn.get("name", "your business")
-    gen = None
+    gen, used_llm = None, False
     if llm.enabled():
         try:
             llm_topics = llm.generate_topics(industry, biz)
             gen = [{"id": i + 1, "title": t["title"], "angle": t["angle"],
                     "keyword": t["keyword"], "priority": i + 1, "approved": False}
                    for i, t in enumerate(llm_topics)]
+            used_llm = True
         except Exception:
             gen = None
     if gen is None:
         gen = topics_gen.generate(industry, biz)
     store.update(lambda st: st.update({"topics": gen, "topics_approved": False}))
+    import metrics
+    metrics.log("topics_generated", count=len(gen), seconds=round(_time.time() - _t0, 1),
+                mode="ai" if used_llm else "template")
     return {"ok": True, "count": len(gen)}
 
 
@@ -166,6 +174,8 @@ def _gen_article(topic, connected, variation=0):
 
 @route("POST", r"/api/generate")
 def api_generate(s, body, m):
+    import time as _time
+    _t0 = _time.time()
     tid = body.get("topic_id")
     topic = next((t for t in s.get("topics", []) if t["id"] == tid), None)
     if not topic:
@@ -177,6 +187,10 @@ def api_generate(s, body, m):
         st["articles"].append(art)
     store.update(fn)
     _persist_article(art)
+    import metrics
+    metrics.log("article_generated", words=art.get("word_count"),
+                seconds=round(_time.time() - _t0, 1),
+                mode="ai" if str(art.get("generator", "")).startswith("AI") else "template")
     return {"ok": True, "article_id": art["id"], "words": art["word_count"]}
 
 
@@ -215,6 +229,8 @@ def api_regenerate(s, body, m):
         st["articles"][idx] = art
     store.update(fn)
     _persist_article(art, remove_id=None)  # id unchanged -> same file overwritten
+    import metrics
+    metrics.log("article_regenerated", words=art.get("word_count"))
     return {"ok": True, "article_id": art["id"], "words": art["word_count"]}
 
 
@@ -236,9 +252,10 @@ def api_article(s, body, m):
 
 # ---------- Publish ----------
 def _publish_art(s, art, is_retry):
-    import framer
+    import framer, metrics
     res = framer.publish(art, is_retry=is_retry)
     art_id = art["id"]  # captured before mutation; dedupe below replaces older publish entries
+    metrics.log("publish", ok=bool(res["ok"]), status=res["log"]["status"], retry=bool(is_retry))
 
     def fn(st):
         st["statuslog"].append(res["log"])
@@ -281,6 +298,8 @@ def api_autopilot(s, body, m):
         st["autopilot"] = on
         st["paused"] = not on
     store.update(fn)
+    import metrics
+    metrics.log("autopilot", on=on)
     return {"ok": True, "autopilot": on, "paused": not on}
 
 
@@ -288,6 +307,12 @@ def api_autopilot(s, body, m):
 def api_state(s, body, m):
     return {k: s.get(k) for k in ("connected", "topics", "articles", "published",
                                   "statuslog", "autopilot", "paused", "topics_approved")}
+
+
+@route("GET", r"/api/metrics")
+def api_metrics(s, body, m):
+    import metrics
+    return metrics.summary()
 
 
 @route("GET", r"/api/health")

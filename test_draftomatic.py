@@ -27,6 +27,7 @@ os.chdir(ROOT)
 # Generation checks run in deterministic template mode: offline, fast, identical every run.
 # (The LLM path is exercised live against Ollama outside this suite.)
 os.environ["DRAFTO_DISABLE_LLM"] = "1"
+os.environ["DRAFTO_METRICS_PATH"] = "/tmp/draftomatic-test-metrics.jsonl"  # never touch real metrics
 
 VERBOSE = "-v" in sys.argv
 
@@ -60,7 +61,7 @@ def main():
     print("=" * 56)
 
     # ---- 0. static checks: modules compile ----
-    for f in ("server.py", "store.py", "content.py", "cover.py", "framer.py", "topics_gen.py", "llm.py"):
+    for f in ("server.py", "store.py", "content.py", "cover.py", "framer.py", "topics_gen.py", "llm.py", "metrics.py"):
         try:
             py_compile.compile(os.path.join(ROOT, f), doraise=True)
             check(f"compiles: {f}", True)
@@ -80,7 +81,20 @@ def main():
         except llmmod.LLMError:
             check("llm: garbage rejected", True)
     except Exception as e:
-        check("llm module importable", False, e)
+        check("llm module importable", False, str(e))
+
+    # ---- 0c. metrics plumbing unit checks (offline) ----
+    try:
+        import metrics as mx
+        check("metrics: summary shape", set(mx.summary().keys()) == {"sessions", "totals", "raw_event_count"})
+        r = mx.log("unittest-event", words=5)
+        check("metrics: log returns record", r.get("event") == "unittest-event")
+        check("metrics: event persisted", any(e.get("event") == "unittest-event" for e in mx.read_all()))
+        s2 = mx.summary()
+        check("metrics: totals keys", all(k in s2["totals"] for k in
+              ("sessions", "drafts_generated", "avg_words", "publishes", "autopilot_left_on")))
+    except Exception as e:
+        check("metrics module importable", False, str(e))
 
     # ---- boot on a scratch port with a state COPY ----
     for mod in ("server", "content", "store", "cover", "framer", "topics_gen"):
@@ -200,6 +214,9 @@ def main():
         final = api(BASE, "GET", "/api/state")
         check("state endpoint complete", all(k in final for k in
               ("connected", "topics", "articles", "published", "statuslog", "autopilot", "paused")))
+        mxr = api(BASE, "GET", "/api/metrics")
+        check("metrics endpoint aggregates", mxr.get("totals", {}).get("sessions", 0) >= 1, mxr)
+        check("metrics counted this session's drafts", mxr.get("totals", {}).get("drafts_generated", 0) >= 2, mxr)
     finally:
         srvmod.shutdown()
         if had_state:
