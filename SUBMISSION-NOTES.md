@@ -64,3 +64,14 @@ DEMO scaffolding (honest limits, stated in the doc):
    the autopilot toggle off and on (the core assumption: owners leave it on).
 5. (1:50–2:00) Close: "~5 minutes a week is the whole product. Connect → Plan →
    Generate → Publish, no manual work."
+## Metrics collection (added 2026-10-01 — the validated-learning data layer)
+- Every action appends one JSON line to `data/metrics.jsonl` (connect/topics_generated/
+  article_generated/article_regenerated/publish/autopilot), via `metrics.py`.
+- `GET /api/metrics` aggregates per-session funnels: topics, drafts, words, first-draft
+  latency, publishes, retries, and whether the tester left autopilot on.
+- Probes and tests never touch real metrics (`DRAFTO_METRICS_PATH` override; test
+  suite passes its own temp path). Verified live on :8765 with zero events until
+  first real tester session.
+- This is what the Week 5 Validated Learning report cites as "collected key metrics":
+  per-tester activation funnel, first-draft generation time (TTV proxy), draft word
+  counts, publish behavior, and the core-assumption test (autopilot left on/off).
