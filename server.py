@@ -84,9 +84,21 @@ def api_topics(s, body, m):
 
 @route("POST", r"/api/topics/generate")
 def api_topics_generate(s, body, m):
-    import topics_gen
+    import topics_gen, llm
     conn = s.get("connected") or {}
-    gen = topics_gen.generate(conn.get("industry", "general"), conn.get("name", "your business"))
+    industry = conn.get("industry", "general")
+    biz = conn.get("name", "your business")
+    gen = None
+    if llm.enabled():
+        try:
+            llm_topics = llm.generate_topics(industry, biz)
+            gen = [{"id": i + 1, "title": t["title"], "angle": t["angle"],
+                    "keyword": t["keyword"], "priority": i + 1, "approved": False}
+                   for i, t in enumerate(llm_topics)]
+        except Exception:
+            gen = None
+    if gen is None:
+        gen = topics_gen.generate(industry, biz)
     store.update(lambda st: st.update({"topics": gen, "topics_approved": False}))
     return {"ok": True, "count": len(gen)}
 
@@ -141,14 +153,24 @@ def api_topics_add(s, body, m):
 
 
 # ---------- Generate ----------
+def _gen_article(topic, connected, variation=0):
+    """LLM first, deterministic template fallback — result is tagged with which ran."""
+    import content, llm
+    if llm.enabled():
+        try:
+            return llm.generate_article(topic, connected, variation)
+        except Exception:
+            pass  # Ollama down / bad JSON / timeout -> template mode keeps the flow alive
+    return content.generate(topic, connected, variation)
+
+
 @route("POST", r"/api/generate")
 def api_generate(s, body, m):
-    import content
     tid = body.get("topic_id")
     topic = next((t for t in s.get("topics", []) if t["id"] == tid), None)
     if not topic:
         return {"ok": False, "error": "topic not found"}
-    art = content.generate(topic, s.get("connected") or {})
+    art = _gen_article(topic, s.get("connected") or {})
 
     def fn(st):
         art["topic_id"] = tid
@@ -182,8 +204,10 @@ def api_regenerate(s, body, m):
         return {"ok": False, "error": "article not found"}
     old = s["articles"][idx]
     topic = next((t for t in s.get("topics", []) if t["id"] == old.get("topic_id")), None)
-    art = content.generate(topic or {"title": old.get("title", "Article"), "angle": "", "keyword": old.get("keyword", "")},
-                           s.get("connected") or {}, variation=old.get("variation", 0) + 1)
+    if topic is None:
+        topic = {"title": old.get("title", "Article"), "angle": "", "keyword": old.get("keyword", "")}
+    art = _gen_article(topic, s.get("connected") or {},
+                       variation=old.get("variation", 0) + 1)
 
     def fn(st):
         art["topic_id"] = st["articles"][idx].get("topic_id")

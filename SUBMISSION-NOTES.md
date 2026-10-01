@@ -8,6 +8,10 @@ Submission file: `~/Downloads/Draftomatic MVP (Week 4).docx`.
 
 REAL and working (verified by automated checks + live screenshots):
 - 4-screen web app, stdlib-only Python server (`python3 server.py`, port 8765)
+- AI generation via Andrew's local Ollama (glm-5.3-flash:cloud, `llm.py`): AI topic
+  planning (~10 s) and full AI articles 650–850 words (~35 s each), tagged
+  `generator: AI` and shown as an "AI-written" pill on the preview screen; template
+  fallback keeps every flow alive if the endpoint is down
 - Connect flow: sign-up fields + site URL → industry auto-detection (keyword table over
   scraped page text; falls back to the seed company when no live site is reachable)
 - Topic planning: 12 SEO-ranked topics generated from the detected industry; approve-all,
@@ -21,7 +25,12 @@ REAL and working (verified by automated checks + live screenshots):
 
 DEMO scaffolding (honest limits, stated in the doc):
 - The connected site is a seed company ("Peak Lawn & Landscape"), not Andrew's real site
-- Article text comes from a template engine, not an LLM (no API keys needed to run)
+- Content generation uses his local Ollama endpoint (glm-5.3-flash:cloud via the
+  ollama-launch proxy, `llm.py`) — AI-written topics and 650–850-word articles,
+  ~10s topics / ~35 s per article. Falls back to the deterministic template engine
+  (content.py/topics_gen.py) whenever the LLM path errors; Vercel serverless deploys
+  always run template mode (can't reach localhost Ollama). `DRAFTO_DISABLE_LLM=1`
+  forces template mode for offline tests.
 - Publish writes the exact Framer CMS payload to `published/<slug>.json` instead of
   calling Framer's API. The live-API path is implemented and used automatically when
   `FRAMER_API_KEY` is set; it is untested against a real Framer account

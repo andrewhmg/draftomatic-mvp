@@ -24,6 +24,10 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, ROOT)
 os.chdir(ROOT)
 
+# Generation checks run in deterministic template mode: offline, fast, identical every run.
+# (The LLM path is exercised live against Ollama outside this suite.)
+os.environ["DRAFTO_DISABLE_LLM"] = "1"
+
 VERBOSE = "-v" in sys.argv
 
 _results = []
@@ -56,7 +60,7 @@ def main():
     print("=" * 56)
 
     # ---- 0. static checks: modules compile ----
-    for f in ("server.py", "store.py", "content.py", "cover.py", "framer.py", "topics_gen.py"):
+    for f in ("server.py", "store.py", "content.py", "cover.py", "framer.py", "topics_gen.py", "llm.py"):
         try:
             py_compile.compile(os.path.join(ROOT, f), doraise=True)
             check(f"compiles: {f}", True)
@@ -64,6 +68,19 @@ def main():
             check(f"compiles: {f}", False, e)
             print(f"COMPILE FAIL in {f}: {e}")
             return finish()  # cannot continue meaningfully
+
+    # ---- 0b. LLM plumbing unit checks (offline, no network) ----
+    try:
+        import llm as llmmod
+        check("llm: disabled via DRAFTO_DISABLE_LLM", llmmod.enabled() is False)
+        check("llm: fenced JSON parses", llmmod._parse_json('```json\n{"a": 1}\n```') == {"a": 1})
+        check("llm: preamble tolerated", llmmod._parse_json('Sure! Here is the JSON:\n{"a": 1}') == {"a": 1})
+        try:
+            llmmod._parse_json("not json at all"); check("llm: garbage rejected", False)
+        except llmmod.LLMError:
+            check("llm: garbage rejected", True)
+    except Exception as e:
+        check("llm module importable", False, e)
 
     # ---- boot on a scratch port with a state COPY ----
     for mod in ("server", "content", "store", "cover", "framer", "topics_gen"):

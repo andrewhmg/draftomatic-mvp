@@ -31,11 +31,13 @@ async function loadState() {
 async function connect(ev) {
   ev.preventDefault();
   const btn = document.getElementById('go');
-  btn.disabled = true; btn.textContent = 'Scanning site…';
+  btn.disabled = true;
+  btn.textContent = 'Connecting…';
   const name = document.getElementById('name').value.trim() || 'Peak Lawn & Landscape';
   const url = document.getElementById('url').value.trim();
   const email = document.getElementById('email').value.trim();
   const r = await api('/api/connect', {name, url, email});
+  btn.textContent = 'Planning topics with AI… (~20s)';
   await api('/api/topics/generate', {});
   await loadState();
 }

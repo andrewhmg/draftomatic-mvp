@@ -28,10 +28,11 @@ async function refresh() {
   let pill = '<span class="pill warn">DRAFT</span>';
   if (pubbed) pill = `<span class="pill ok">PUBLISHED</span> ${pubbed.demo ? '<span class="pill demo">demo mode</span>' : ''}`;
   else if (log && log.status === 'failed') pill = '<span class="pill fail">PUBLISH FAILED</span>';
+  const ai = ART.generator && ART.generator.startsWith('AI') ? '<span class="pill ok">AI-written</span>' : '';
   const links = arts.map(a =>
     `<a href="/preview?id=${a.id}" style="${a.id === ART.id ? 'font-weight:700' : ''}">${a.title.slice(0, 38)}…</a>`).join('<br>');
   document.getElementById('main').innerHTML = `
-    <h1>${ART.title} ${pill}</h1>
+    <h1>${ART.title} ${pill} ${ai}</h1>
     <p class="sub">${ART.word_count} words · slug: <code>/${ART.slug}</code> · variation ${ART.variation}</p>
     <div class="card">
       <label>Meta title (SEO)</label><div class="meta" style="margin-top:0">${ART.meta_title}</div>
@@ -41,7 +42,7 @@ async function refresh() {
     <div class="card" id="body">${ART.body_html}</div>
     <div style="display:flex; gap:10px; flex-wrap:wrap">
       ${pubbed ? '' : `<button class="btn" onclick="pub()">✓ Approve &amp; publish to Framer</button>`}
-      <button class="btn secondary" onclick="regen()">↻ Regenerate draft</button>
+      <button class="btn secondary" onclick="regen(this)">↻ Regenerate draft</button>
     </div>
     <div class="meta">Autopilot: ${s.autopilot ? 'ON — auto-approves and publishes on schedule' : 'PAUSED — nothing publishes until you turn it back on (Dashboard)'}</div>
     <p class="steps">Drafts sidebar:<br>${links}</p>`;
@@ -56,8 +57,10 @@ async function pub() {
   const r = await api('/api/publish', {article_id: ART.id});
   refresh();
 }
-async function regen() {
-  const r = await api('/api/regenerate', {article_id: ART.id});
+async function regen(btn) {
+  btn.disabled = true; btn.textContent = '↻ Rewriting with AI… (~35s)';
+  await api('/api/regenerate', {article_id: ART.id});
+  btn.disabled = false; btn.textContent = '↻ Regenerate draft';
   refresh();
 }
 window.onload = refresh;

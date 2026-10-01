@@ -50,9 +50,14 @@ async function addTopic() {
 }
 async function approveAll() {
   const r = await api('/api/topics/approve', {});
-  document.getElementById('msg').textContent = `${r.approved} topics approved — heading to your first draft`;
   const arts = TOPICS.filter(t => t.approved);
-  for (const t of arts) await api('/api/generate', {topic_id: t.id});
+  let i = 0;
+  for (const t of arts) {
+    i++;
+    document.getElementById('msg').textContent =
+      `Writing draft ${i} of ${arts.length} with AI… about 30–40 seconds per article, the screen updates as each one lands.`;
+    await api('/api/generate', {topic_id: t.id});
+  }
   location.href = '/preview';
 }
 async function regenerate() { await api('/api/topics/generate', {}); refresh(); }
