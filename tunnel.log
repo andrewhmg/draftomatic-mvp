@@ -45,3 +45,46 @@
 2026-09-27T04:52:51Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 127.0.0.1:8765: connect: connection refused" connIndex=0 dest=https://complicated-enters-headset-simon.trycloudflare.com/api/health event=0 ip=198.41.192.57 type=http
 2026-09-27T04:52:51Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 127.0.0.1:8765: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://127.0.0.1:8765
 2026-09-27T04:52:51Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 127.0.0.1:8765: connect: connection refused" connIndex=0 dest=https://complicated-enters-headset-simon.trycloudflare.com/ event=0 ip=198.41.192.57 type=http
+2026-09-27T05:28:00Z ERR Serve tunnel error error="datagram manager error: write udp4 0.0.0.0:58781->198.41.192.57:7844: sendmsg: network is unreachable" connIndex=0 event=0 ip=198.41.192.57
+2026-09-27T05:28:00Z INF Retrying connection in up to 2s connIndex=0 event=0 ip=198.41.192.57
+2026-09-27T05:28:02Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.192.57
+2026-09-27T05:28:02Z ERR Failed to dial a quic connection error="failed to dial to edge with quic: write udp4 0.0.0.0:58781->198.41.192.57:7844: sendmsg: network is unreachable" connIndex=0 event=0 ip=198.41.192.57
+2026-09-27T05:28:02Z INF Retrying connection in up to 4s connIndex=0 event=0 ip=198.41.192.57
+2026-09-27T05:28:03Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.200.23
+2026-09-27T05:28:03Z ERR Failed to dial a quic connection error="failed to dial to edge with quic: write udp4 0.0.0.0:58781->198.41.200.23:7844: sendmsg: network is unreachable" connIndex=0 event=0 ip=198.41.200.23
+2026-09-27T05:28:03Z INF Retrying connection in up to 8s connIndex=0 event=0 ip=198.41.200.23
+2026-09-27T05:28:10Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.200.53
+2026-09-27T05:28:10Z ERR Failed to dial a quic connection error="failed to dial to edge with quic: write udp4 0.0.0.0:58781->198.41.200.53:7844: sendmsg: network is unreachable" connIndex=0 event=0 ip=198.41.200.53
+2026-09-27T05:28:10Z INF Retrying connection in up to 16s connIndex=0 event=0 ip=198.41.200.53
+2026-09-27T05:43:41Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.192.67
+2026-09-27T05:43:41Z ERR Register tunnel error from server side error="Unauthorized: Tunnel not found" connIndex=0 event=0 ip=198.41.192.67
+2026-09-27T05:43:41Z INF Retrying connection in up to 32s connIndex=0 event=0 ip=198.41.192.67
+2026-09-27T05:43:49Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.192.67
+2026-09-27T05:43:49Z ERR Register tunnel error from server side error="Unauthorized: Tunnel not found" connIndex=0 event=0 ip=198.41.192.67
+2026-09-27T05:43:49Z INF Retrying connection in up to 32s connIndex=0 event=0 ip=198.41.192.67
+2026-09-27T05:44:14Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.192.67
+2026-09-27T05:44:14Z ERR Register tunnel error from server side error="Unauthorized: Tunnel not found" connIndex=0 event=0 ip=198.41.192.67
+2026-09-27T05:44:14Z INF Retrying connection in up to 32s connIndex=0 event=0 ip=198.41.192.67
+2026-09-27T05:44:19Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.192.67
+2026-09-27T05:44:19Z ERR Register tunnel error from server side error="Unauthorized: Tunnel not found" connIndex=0 event=0 ip=198.41.192.67
+2026-09-27T05:44:19Z INF Retrying connection in up to 32s connIndex=0 event=0 ip=198.41.192.67
+2026-09-27T05:44:51Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.192.67
+2026-09-27T05:44:51Z ERR Register tunnel error from server side error="Unauthorized: Tunnel not found" connIndex=0 event=0 ip=198.41.192.67
+2026-09-27T05:44:51Z INF Retrying connection in up to 32s connIndex=0 event=0 ip=198.41.192.67
+2026-09-27T05:45:20Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.192.67
+2026-09-27T05:45:21Z ERR Register tunnel error from server side error="Unauthorized: Tunnel not found" connIndex=0 event=0 ip=198.41.192.67
+2026-09-27T05:45:21Z INF Retrying connection in up to 32s connIndex=0 event=0 ip=198.41.192.67
+2026-09-27T05:54:14Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.192.67
+2026-09-27T05:54:14Z ERR Register tunnel error from server side error="Unauthorized: Tunnel not found" connIndex=0 event=0 ip=198.41.192.67
+2026-09-27T05:54:14Z INF Retrying connection in up to 32s connIndex=0 event=0 ip=198.41.192.67
+2026-09-27T05:54:22Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.192.67
+2026-09-27T05:54:22Z ERR Register tunnel error from server side error="Unauthorized: Tunnel not found" connIndex=0 event=0 ip=198.41.192.67
+2026-09-27T05:54:22Z INF Retrying connection in up to 32s connIndex=0 event=0 ip=198.41.192.67
+2026-09-27T05:54:29Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.192.67
+2026-09-27T05:54:29Z ERR Register tunnel error from server side error="Unauthorized: Tunnel not found" connIndex=0 event=0 ip=198.41.192.67
+2026-09-27T05:54:29Z INF Retrying connection in up to 32s connIndex=0 event=0 ip=198.41.192.67
+2026-09-27T05:54:36Z INF Initiating graceful shutdown due to signal terminated ...
+2026-09-27T05:54:36Z ERR Connection terminated connIndex=0
+2026-09-27T05:54:36Z ERR no more connections active and exiting
+2026-09-27T05:54:36Z INF Tunnel server stopped
+2026-09-27T05:54:36Z INF Metrics server stopped

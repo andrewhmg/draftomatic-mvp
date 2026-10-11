@@ -1,5 +1,8 @@
 """Draftomatic MVP — stdlib HTTP server (http.server). Port 8765."""
-import json, os, re, urllib.parse
+import json
+import os
+import re
+import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 import store
@@ -86,7 +89,8 @@ def api_topics(s, body, m):
 
 @route("POST", r"/api/topics/generate")
 def api_topics_generate(s, body, m):
-    import topics_gen, llm
+    import topics_gen
+    import llm
     import time as _time
     _t0 = _time.time()
     conn = s.get("connected") or {}
@@ -163,7 +167,8 @@ def api_topics_add(s, body, m):
 # ---------- Generate ----------
 def _gen_article(topic, connected, variation=0):
     """LLM first, deterministic template fallback — result is tagged with which ran."""
-    import content, llm
+    import content
+    import llm
     if llm.enabled():
         try:
             return llm.generate_article(topic, connected, variation)
@@ -211,7 +216,6 @@ def _persist_article(art, remove_id=None):
 
 @route("POST", r"/api/regenerate")
 def api_regenerate(s, body, m):
-    import content
     aid = body.get("article_id")
     idx = next((i for i, a in enumerate(s.get("articles", [])) if a["id"] == aid), None)
     if idx is None:
@@ -252,7 +256,8 @@ def api_article(s, body, m):
 
 # ---------- Publish ----------
 def _publish_art(s, art, is_retry):
-    import framer, metrics
+    import framer
+    import metrics
     res = framer.publish(art, is_retry=is_retry)
     art_id = art["id"]  # captured before mutation; dedupe below replaces older publish entries
     metrics.log("publish", ok=bool(res["ok"]), status=res["log"]["status"], retry=bool(is_retry))

@@ -42,7 +42,7 @@ def publish(article, is_retry=False):
     try:
         cpath, crel = cover.generate_cover(article.get("title"), art_id)
         payload["image"] = crel
-    except Exception as e:
+    except Exception:
         pass  # cover failure should not block publish; logged below
 
     key = os.environ.get("FRAMER_API_KEY")

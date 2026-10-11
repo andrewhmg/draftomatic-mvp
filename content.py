@@ -117,8 +117,8 @@ def generate(topic, connected, variation=0):
         f"is simple: the work is done once, done right, and you did not have to rearrange your life for it. "
         + (f"Typical scope items include the {kw} itself plus the prep and cleanup around it, so you are not left "
            f"with a half-touched project." if v % 2 else
-           f"Every visit ends the same way: photos, a short summary, and a clear answer on what (if anything) needs "
-           f"a follow-up."),
+           "Every visit ends the same way: photos, a short summary, and a clear answer on what (if anything) needs "
+           "a follow-up."),
         COSTS[v % len(COSTS)].format(**ctx),
         DIY[v % len(DIY)].format(**ctx) if v % 2 else MISTAKES[v % len(MISTAKES)].format(**ctx),
         (MISTAKES[v % len(MISTAKES)].format(**ctx) if v % 2 else DIY[v % len(DIY)].format(**ctx)),

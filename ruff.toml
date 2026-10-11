@@ -1,0 +1,8 @@
+# Draftomatic lint config — ruff (E/F/W = pycodestyle errors, pyflakes, warnings)
+line-length = 120
+target-version = "py311"
+
+[lint]
+select = ["E", "F", "W"]
+# E501 long lines allowed: HTML/SVG templates and long URL literals
+ignore = ["E501"]

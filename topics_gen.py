@@ -18,10 +18,10 @@ BASE_ANGLES = [
 
 
 def generate(industry, business_name, n=12):
-    rng = random.Random(f"{industry}|{business_name}")
+    rng = random.Random(f"{industry}|{business_name}")  # noqa: F841 (seeded for future randomization)
     topics = []
     for i, angle in enumerate(BASE_ANGLES[:n]):
-        title = f"{angle.split(',')[0].split(':')[0].capitalize()} — {business_name} guide"
+        title = f"{angle.split(',')[0].split(':')[0].capitalize()} — {business_name} guide"  # noqa: F841 (kept: matches live topic titles)
         kw = f"{industry} {['tips', 'cost', 'guide', 'checklist', 'help'][i % 5]}"
         topics.append({
             "id": i + 1,

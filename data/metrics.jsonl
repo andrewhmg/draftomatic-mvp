@@ -1,0 +1,55 @@
+{"ts": "2026-10-01T21:11:39.748571Z", "event": "connect", "industry": "landscaping", "has_url": false}
+{"ts": "2026-10-01T21:11:39.752097Z", "event": "connect", "industry": "dental", "has_url": false}
+{"ts": "2026-10-01T21:11:39.754596Z", "event": "connect", "industry": "landscaping", "has_url": false}
+{"ts": "2026-10-01T21:11:39.757377Z", "event": "topics_generated", "count": 12, "seconds": 0.0, "mode": "template"}
+{"ts": "2026-10-01T21:11:39.771348Z", "event": "article_generated", "words": 635, "seconds": 0.0, "mode": "template"}
+{"ts": "2026-10-01T21:11:39.775485Z", "event": "article_regenerated", "words": 691}
+{"ts": "2026-10-01T21:11:39.777668Z", "event": "publish", "ok": true, "status": "published-demo", "retry": false}
+{"ts": "2026-10-01T21:11:39.780833Z", "event": "publish", "ok": true, "status": "published-demo", "retry": false}
+{"ts": "2026-10-01T21:11:39.961387Z", "event": "publish", "ok": false, "status": "failed", "retry": true}
+{"ts": "2026-10-01T21:11:39.966799Z", "event": "autopilot", "on": false}
+{"ts": "2026-10-01T21:11:39.969124Z", "event": "autopilot", "on": true}
+{"ts": "2026-10-01T21:11:43.837664Z", "event": "connect", "industry": "landscaping", "has_url": false}
+{"ts": "2026-10-01T21:11:43.841584Z", "event": "connect", "industry": "dental", "has_url": false}
+{"ts": "2026-10-01T21:11:43.843765Z", "event": "connect", "industry": "landscaping", "has_url": false}
+{"ts": "2026-10-01T21:11:43.846066Z", "event": "topics_generated", "count": 12, "seconds": 0.0, "mode": "template"}
+{"ts": "2026-10-01T21:11:43.861578Z", "event": "article_generated", "words": 635, "seconds": 0.0, "mode": "template"}
+{"ts": "2026-10-01T21:11:43.865020Z", "event": "article_regenerated", "words": 691}
+{"ts": "2026-10-01T21:11:43.867281Z", "event": "publish", "ok": true, "status": "published-demo", "retry": false}
+{"ts": "2026-10-01T21:11:43.871346Z", "event": "publish", "ok": true, "status": "published-demo", "retry": false}
+{"ts": "2026-10-01T21:11:44.007146Z", "event": "publish", "ok": false, "status": "failed", "retry": true}
+{"ts": "2026-10-01T21:11:44.013004Z", "event": "autopilot", "on": false}
+{"ts": "2026-10-01T21:11:44.015031Z", "event": "autopilot", "on": true}
+{"ts": "2026-10-01T21:11:51.768909Z", "event": "connect", "industry": "landscaping", "has_url": false}
+{"ts": "2026-10-01T21:11:51.773202Z", "event": "connect", "industry": "dental", "has_url": false}
+{"ts": "2026-10-01T21:11:51.775432Z", "event": "connect", "industry": "landscaping", "has_url": false}
+{"ts": "2026-10-01T21:11:51.777864Z", "event": "topics_generated", "count": 12, "seconds": 0.0, "mode": "template"}
+{"ts": "2026-10-01T21:11:51.793008Z", "event": "article_generated", "words": 635, "seconds": 0.0, "mode": "template"}
+{"ts": "2026-10-01T21:11:51.796476Z", "event": "article_regenerated", "words": 691}
+{"ts": "2026-10-01T21:11:51.798679Z", "event": "publish", "ok": true, "status": "published-demo", "retry": false}
+{"ts": "2026-10-01T21:11:51.802052Z", "event": "publish", "ok": true, "status": "published-demo", "retry": false}
+{"ts": "2026-10-01T21:11:51.933692Z", "event": "publish", "ok": false, "status": "failed", "retry": true}
+{"ts": "2026-10-01T21:11:51.939495Z", "event": "autopilot", "on": false}
+{"ts": "2026-10-01T21:11:51.941668Z", "event": "autopilot", "on": true}
+{"ts": "2026-10-01T21:11:52.785915Z", "event": "connect", "industry": "landscaping", "has_url": false}
+{"ts": "2026-10-01T21:11:52.790136Z", "event": "connect", "industry": "dental", "has_url": false}
+{"ts": "2026-10-01T21:11:52.792184Z", "event": "connect", "industry": "landscaping", "has_url": false}
+{"ts": "2026-10-01T21:11:52.794459Z", "event": "topics_generated", "count": 12, "seconds": 0.0, "mode": "template"}
+{"ts": "2026-10-01T21:11:52.808812Z", "event": "article_generated", "words": 635, "seconds": 0.0, "mode": "template"}
+{"ts": "2026-10-01T21:11:52.812269Z", "event": "article_regenerated", "words": 691}
+{"ts": "2026-10-01T21:11:52.814641Z", "event": "publish", "ok": true, "status": "published-demo", "retry": false}
+{"ts": "2026-10-01T21:11:52.818134Z", "event": "publish", "ok": true, "status": "published-demo", "retry": false}
+{"ts": "2026-10-01T21:11:52.953262Z", "event": "publish", "ok": false, "status": "failed", "retry": true}
+{"ts": "2026-10-01T21:11:52.959219Z", "event": "autopilot", "on": false}
+{"ts": "2026-10-01T21:11:52.961253Z", "event": "autopilot", "on": true}
+{"ts": "2026-10-01T21:11:53.806175Z", "event": "connect", "industry": "landscaping", "has_url": false}
+{"ts": "2026-10-01T21:11:53.809825Z", "event": "connect", "industry": "dental", "has_url": false}
+{"ts": "2026-10-01T21:11:53.811985Z", "event": "connect", "industry": "landscaping", "has_url": false}
+{"ts": "2026-10-01T21:11:53.814330Z", "event": "topics_generated", "count": 12, "seconds": 0.0, "mode": "template"}
+{"ts": "2026-10-01T21:11:53.828626Z", "event": "article_generated", "words": 635, "seconds": 0.0, "mode": "template"}
+{"ts": "2026-10-01T21:11:53.831938Z", "event": "article_regenerated", "words": 691}
+{"ts": "2026-10-01T21:11:53.834101Z", "event": "publish", "ok": true, "status": "published-demo", "retry": false}
+{"ts": "2026-10-01T21:11:53.838182Z", "event": "publish", "ok": true, "status": "published-demo", "retry": false}
+{"ts": "2026-10-01T21:11:53.976670Z", "event": "publish", "ok": false, "status": "failed", "retry": true}
+{"ts": "2026-10-01T21:11:53.982211Z", "event": "autopilot", "on": false}
+{"ts": "2026-10-01T21:11:53.984348Z", "event": "autopilot", "on": true}

@@ -77,7 +77,8 @@ def main():
         check("llm: fenced JSON parses", llmmod._parse_json('```json\n{"a": 1}\n```') == {"a": 1})
         check("llm: preamble tolerated", llmmod._parse_json('Sure! Here is the JSON:\n{"a": 1}') == {"a": 1})
         try:
-            llmmod._parse_json("not json at all"); check("llm: garbage rejected", False)
+            llmmod._parse_json("not json at all")
+            check("llm: garbage rejected", False)
         except llmmod.LLMError:
             check("llm: garbage rejected", True)
     except Exception as e:
@@ -188,7 +189,7 @@ def main():
               sorted(payload.keys()))
         sl = api(BASE, "GET", "/api/statuslog")["statuslog"]
         check("statuslog entry", any(x.get("status") == "published-demo" for x in sl))
-        p2 = api(BASE, "POST", "/api/publish", {"article_id": aid})  # republish
+        api(BASE, "POST", "/api/publish", {"article_id": aid})  # republish
         pubs = [x for x in api(BASE, "GET", "/api/state")["published"] if x["article_id"] == aid]
         check("republish dedupes (no dupes)", len(pubs) == 1, len(pubs))
 
