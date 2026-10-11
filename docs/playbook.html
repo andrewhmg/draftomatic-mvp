@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Draftomatic — New Developer Playbook</title>
+<style>
+  :root { --ink:#1f2430; --mut:#5b6472; --brand:#6d28d9; --brand2:#dbdcff; --card:#ffffff; --bg:#f4f4f9; --ok:#166534; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font:16px/1.55 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color:var(--ink); background:var(--bg); }
+  header.hero { background:linear-gradient(135deg,#6d28d9,#4c1d95); color:#fff; padding:40px 24px 32px; }
+  .wrap { max-width:880px; margin:0 auto; padding:0 20px; }
+  header.hero h1 { font-size:30px; margin-bottom:6px; }
+  header.hero p { opacity:.92; max-width:640px; }
+  .pills { margin-top:14px; display:flex; gap:8px; flex-wrap:wrap; }
+  .pill { background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.35); padding:4px 12px; border-radius:999px; font-size:13px; }
+  nav.toc { background:var(--card); border:1px solid #e4e4ee; border-radius:12px; padding:16px 20px; margin:20px auto; }
+  nav.toc b { display:block; margin-bottom:8px; font-size:14px; color:var(--mut); text-transform:uppercase; letter-spacing:.06em; }
+  nav.toc ol { columns:2; column-gap:32px; padding-left:22px; }
+  nav.toc a { color:var(--brand); text-decoration:none; }
+  nav.toc a:hover { text-decoration:underline; }
+  section { background:var(--card); border:1px solid #e4e4ee; border-radius:12px; padding:24px 24px 20px; margin:0 auto 20px; }
+  section h2 { font-size:21px; margin-bottom:4px; }
+  section .sub { color:var(--mut); font-size:14px; margin-bottom:14px; }
+  h3 { font-size:15px; margin:16px 0 6px; }
+  p { margin:8px 0; }
+  ul, ol { margin:8px 0 8px 22px; }
+  li { margin:4px 0; }
+  code { background:#eef0f6; border:1px solid #e2e4ec; border-radius:5px; padding:1px 6px; font-size:13.5px; font-family:"SF Mono", Menlo, Consolas, monospace; }
+  pre { background:#1f2430; color:#e6e9f2; border-radius:10px; padding:14px 16px; overflow-x:auto; font-size:13px; line-height:1.5; margin:10px 0; }
+  pre code { background:none; border:none; color:inherit; padding:0; }
+  table { width:100%; border-collapse:collapse; margin:10px 0; font-size:14.5px; }
+  th { text-align:left; background:#f0eefc; color:#3b2f77; }
+  th, td { border:1px solid #e2e2ee; padding:7px 10px; vertical-align:top; }
+  a { color:var(--brand); }
+  .tip { border-left:4px solid var(--brand); background:#f5f3ff; border-radius:8px; padding:10px 14px; margin:12px 0; font-size:14.5px; }
+  .warn { border-left:4px solid #b45309; background:#fffbeb; border-radius:8px; padding:10px 14px; margin:12px 0; font-size:14.5px; }
+  .verified { display:inline-block; background:#ecfdf3; border:1px solid #bbf7d0; color:var(--ok); font-size:12px; padding:2px 10px; border-radius:999px; margin-left:8px; vertical-align:2px; }
+  footer { text-align:center; color:var(--mut); font-size:13px; padding:10px 0 30px; }
+  @media (max-width:640px){ nav.toc ol { columns:1; } section{ padding:18px 16px; } header.hero h1{ font-size:24px; } table{ font-size:13px; } }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>Draftomatic — New Developer Playbook</h1>
+    <p>Welcome to the team. This is everything you need on day one: what we build with, how we work, and the exact commands to get a working dev environment on your machine in under 30 minutes. Follow it top to bottom.</p>
+    <div class="pills"><span class="pill">Owner: Andrew Hogge</span><span class="pill">Stack: Python · Ollama · Framer · Vercel</span><span class="pill">Updated: Oct 10, 2026</span></div>
+  </div>
+</header>
+
+<nav class="toc wrap" style="max-width:920px;">
+  <b>Contents</b>
+  <ol>
+    <li><a href="#language">Language Selection</a></li>
+    <li><a href="#ide">IDE Selection &amp; Setup</a></li>
+    <li><a href="#dev-process">Development Strategy</a></li>
+    <li><a href="#git">Git Strategy &amp; Controls</a></li>
+    <li><a href="#issues">Issue Tracking</a></li>
+    <li><a href="#ai">AI Agents &amp; Controls</a></li>
+    <li><a href="#quality">Code Quality</a></li>
+    <li><a href="#testing">Testing Frameworks</a></li>
+    <li><a href="#other">Other Controls, Tools &amp; Procedures</a></li>
+  </ol>
+</nav>
+
+<main class="wrap" style="max-width:920px;">
+
+<section id="language">
+  <h2>1. Language Selection</h2>
+  <div class="sub">What we write in, and why.</div>
+  <p>We use <b>Python 3.11, stdlib only</b> (no Flask, no Django, no pip installs at runtime) for the entire product: server, content pipeline, topic generator, metrics, and test suite.</p>
+  <ul>
+    <li><b>Zero runtime dependencies.</b> A new machine only needs Python itself; <code>git clone</code> and <code>python3 server.py</code> boots the whole app. In a serverless deployment (Vercel) this keeps the footprint tiny.</li>
+    <li><b>It is the language our AI stack speaks natively.</b> Our Ollama integration and content templating are pure Python; stdlib <code>http.server</code> routing, <code>json</code>, and <code>unittest</code>-style checks keep the surface auditable.</li>
+    <li><b>Generated HTML is rendered server-side</b> from Python dicts (article = <code>{intro, sections[], conclusion}</code> keys), so there is no second client-side language to learn.</li>
+  </ul>
+  <div class="tip">When we do need a second language it will be TypeScript for a future browser editor &mdash; until then, Python everywhere, stdlib everywhere.</div>
+</section>
+
+<section id="ide">
+  <h2>2. IDE Selection &amp; Setup</h2>
+  <div class="sub">Get a working editor and a running app in under 30 minutes.</div>
+  <ol>
+    <li><b>Install VS Code</b> (our standard editor, free): <a href="https://code.visualstudio.com/download">code.visualstudio.com/download</a>. The <code>uninstall-code</code> command in our repo notes moves it to Applications on macOS.</li>
+    <li><b>Install Python 3.11+</b>: <a href="https://www.python.org/downloads/">python.org/downloads</a> &mdash; or verify with <code>python3 --version</code>. No other runtimes needed.</li>
+    <li><b>Install Ollama</b> (local LLM runtime that powers AI generation): <a href="https://ollama.com/download">ollama.com/download</a>, then:</li>
+  </ol>
+  <pre><code>ollama pull glm-5.3-flash:cloud   # the model our pipeline calls
+ollama list                       # verify it downloaded</code></pre>
+  <ol start="4">
+    <li><b>Clone and boot the app</b>:</li>
+  </ol>
+  <pre><code>git clone https://github.com/andrewhmg/draftomatic-mvp.git
+cd draftomatic-mvp
+python3 server.py                 # serves http://127.0.0.1:8765</code></pre>
+  <ol start="5">
+    <li><b>Open the folder in VS Code</b> and install these two extensions from the Extensions marketplace: <b>Python</b> (Microsoft, <code>ms-python.python</code>) and <b>Ruff</b> (astral, <code>charliermarsh.ruff</code>). Ruff in-editor is wired to the repo's <code>ruff.toml</code>, so you see the same lint verdicts the pre-commit gate enforces.</li>
+    <li><b>Verify your setup</b>: visit <code>http://127.0.0.1:8765</code> &mdash; you should see the Draftomatic dashboard. If the AI generation step is slow, that's normal: topic planning takes ~20s, each article ~35s on the local model.</li>
+  </ol>
+  <div class="tip">The app runs fine with Ollama stopped &mdash; a template engine takes over and writes placeholder-quality drafts, so you can develop UI/flow work offline.</div>
+</section>
+
+<section id="dev-process">
+  <h2>3. Development Strategy</h2>
+  <div class="sub">Kanban: our process and how a work item moves.</div>
+  <p>We run <b>Kanban</b> with a four-column board and WIP limits, exercised week by week during the MVP build. Card lifecycle:</p>
+  <pre><code>Backlog → In Progress (WIP 2) → Review → Done</code></pre>
+  <ul>
+    <li><b>Backlog</b> holds user-facing stories plus <b>technical cards from the test suite</b> (every failing or new check becomes a card with its test name in the title).</li>
+    <li><b>Pull, don't push:</b> you take the top card only when your In-Progress column has room.</li>
+    <li><b>Definition of Done</b> for every card: code on <code>main</code>, <code>test_draftomatic.py</code> passes with your change included, and the README covers any new endpoint.</li>
+    <li><b>Weekly planning meeting</b> (Monday, 15 min): reorder Backlog against last week's metrics (<code>/api/metrics</code> funnel numbers) instead of by feel.</li>
+  </ul>
+</section>
+
+<section id="git">
+  <h2>4. Git Strategy &amp; Controls</h2>
+  <div class="sub">Trunk-based with short-lived branches; review before merge.</div>
+  <ul>
+    <li><b>Main is always shippable.</b> Every push to <code>main</code> is auto-deployed to production by Vercel &mdash; never commit straight to <code>main</code>.</li>
+    <li><b>Branches:</b> short-lived, named <code>&lt;area&gt;-&lt;change&gt;</code>, e.g. <code>metrics-funnel-endpoint</code>, <code>llm-json-parity</code>. Lifespan target: same day.</li>
+    <li><b>Commit messages:</b> <code>area: what changed</code> &mdash; e.g. <code>metrics: append-only event log + /api/metrics session aggregation</code>. Present tense, no issue numbers needed.</li>
+    <li><b>Review control:</b> open a GitHub pull request on <a href="https://github.com/andrewhmg/draftomatic-mvp">andrewhmg/draftomatic-mvp</a>; a second pair of eyes approves before merge, and the PR description must state which test checks cover the change.</li>
+    <li><b>Never in git:</b> runtime state. <code>data/state.json</code>, <code>data/articles/</code>, <code>published/</code>, <code>covers/</code>, <code>server.log</code>, <code>.env</code> are all in <code>.gitignore</code>. Secrets live only in environment variables.</li>
+  </ul>
+  <div class="tip">Why trunk-based instead of full <a href="http://danielkummer.github.io/git-flow-cheatsheet/">git-flow</a>: we are a two-pizza team shipping to one production app. Develop/release branches add ceremony without adding safety at our size; the PR review requirement is where our control actually lives.</div>
+</section>
+
+<section id="issues">
+  <h2>5. Issue Tracking</h2>
+  <div class="sub">Trello &mdash; where work lives.</div>
+  <ul>
+    <li><b>Tool:</b> GitHub Issues on our repo (label-based Kanban) &mdash; board lives at <a href="https://github.com/andrewhmg/draftomatic-mvp/issues">github.com/andrewhmg/draftomatic-mvp/issues</a>. Why not Trello: labels <code>backlog / in-progress / review / done</code> mirror the section-3 columns and every card sits one click from the PR that does the work.</li>
+    <li><b>Card anatomy:</b> title = user-visible behavior; body = acceptance criteria as a checklist; every card carries at least one <b>test-suite check name</b> so QA maps 1:1 to code. Area labels (llm, ui, metrics, deploy) tag the sprint.</li>
+    <li><b>Link cards to code:</b> paste the issue number into the PR body (<code>Fixes #N</code>) &mdash; merging the PR auto-closes the card, which is our Done transition.</li>
+    <li><b>Day-one task:</b> pick any <code>backlog</code> issue, run the setup in section 2, and fix the card end-to-end &mdash; it is the fastest way to learn our whole loop.</li>
+  </ul>
+</section>
+
+<section id="ai">
+  <h2>6. AI Agents &amp; Controls</h2>
+  <div class="sub">Our product IS an AI pipeline &mdash; these rules keep it honest.</div>
+  <p><b>Approved tools:</b> Ollama running the <code>glm-5.3-flash:cloud</code> model locally (product generation + dev assistance), and Claude-class assistants for boilerplate and review. Unapproved: any cloud LLM with customer data.</p>
+  <h3>The five guardrails (all tested in CI)</h3>
+  <ul>
+    <li><b>1. Fenced-JSON parsing only.</b> The model is instructed to return JSON; the integration accepts fenced <code>```json</code> blocks and tolerates chatter preambles, and unit checks (<code>llm: fenced JSON parses</code>, <code>llm: preamble tolerated</code>, <code>llm: garbage rejected</code>) prove malformed output never reaches the app.</li>
+    <li><b>2. Kill-switch env var.</b> <code>DRAFTO_DISABLE_LLM=1</code> forces template mode for any run &mdash; demonstrated in tests; it is also how the test suite runs fully offline.</li>
+    <li><b>3. Tag every AI artifact.</b> Generated drafts carry a visible <code>generator: "AI ..."</code> pill in the UI. A reader can always tell machine-written from human-edited.</li>
+    <li><b>4. Length gates.</b> Regeneration must stay in the 600&ndash;1000 word band (<code>regenerated body in band</code> check) &mdash; no runaway generations.</li>
+    <li><b>5. Human review before publish.</b> Nothing a model wrote goes live without a person pressing Publish in the dashboard (or the autopilot window a human explicitly enabled and can pause &mdash; pause/resume are tested endpoints).</li>
+  </ul>
+  <div class="warn">Confidentiality rule: never paste customer site data, credentials, or unpublished business content into an AI tool other than our local Ollama runtime.</div>
+</section>
+
+<section id="quality">
+  <h2>7. Code Quality</h2>
+  <div class="sub">Ruff lint gate &mdash; configured in the repo, enforced before every commit.</div>
+  <ul>
+    <li><b>Linter:</b> <code>ruff</code> with the repo's <code>ruff.toml</code> &mdash; rule sets <code>E</code> (pycodestyle errors), <code>F</code> (pyflakes), <code>W</code> (warnings); <code>line-length = 120</code>; <code>target-version = "py311"</code>; <code>E501</code> (long lines) ignored for HTML/SVG template literals.</li>
+    <li><b>Enforcement:</b> a <b>pre-commit hook</b> (`.git/hooks/pre-commit`, installed with the clone via <code>scripts/install-hooks.sh</code>) runs <code>ruff check .</code> and <b>blocks the commit</b> on any finding. Fix with <code>ruff check . --fix</code>.</li>
+    <li><b>Formatting:</b> ruff's formatter profile, 120 cols &mdash; same tool does lint and format, so one config, one gate.</li>
+    <li><b>Vulnerability scanning:</b> stdlib-only means no third-party runtime deps to audit; dependencies are dev-only (<code>ruff</code>) and checked with <code>python3 -m pip install ruff &amp;&amp; ruff check .</code> fresh each release. The attack surface we guard instead is input handling: publish keys are validated and a bad key is a tested failure path, not a crash.</li>
+  </ul>
+  <pre><code># current state of the gate (verified Oct 10):
+ruff check .          # → "All checks passed!"
+python3 test_draftomatic.py   # → 54/54 checks passed</code></pre>
+</section>
+
+<section id="testing">
+  <h2>8. Testing Frameworks</h2>
+  <div class="sub">One self-contained suite: <code>test_draftomatic.py</code> &mdash; stdlib only.</div>
+  <ul>
+    <li><b>What it does:</b> boots the real server on a scratch port, <b>copies the data state aside</b> and restores it afterward, then drives the full API flow: health, pages, connect, topics, generate, regenerate, publish, retry, autopilot.</li>
+    <li><b>54 checks</b> (verified passing Oct 10, 2026) across compile checks, LLM plumbing unit tests, metrics plumbing, and every HTTP endpoint including <b>failure paths</b> (publish with a bad key must fail with a logged attempt number, not corrupt state).</li>
+    <li><b>How testing fits the workflow:</b> <code>python3 test_draftomatic.py</code> before pushing &mdash; its exit code is the merge gate, and every Trello card carries the test names that cover it (see section 4).</li>
+    <li><b>Run verbose</b> to see every check: <code>python3 test_draftomatic.py -v</code></li>
+  </ul>
+  <div class="tip">If your change touches <code>store.py</code>, <code>server.py</code>, or <code>metrics.py</code>, add a named check to the suite in the same PR. A feature without a test name on its card is not Done (section 3).</div>
+</section>
+
+<section id="other">
+  <h2>9. Other Controls, Tools &amp; Procedures</h2>
+  <div class="sub">Deployment, secrets, demo uptime, and where things live.</div>
+  <h3>Deployments</h3>
+  <ul>
+    <li><b>Local dev:</b> <code>python3 server.py</code> &rarr; <code>http://127.0.0.1:8765</code>.</li>
+    <li><b>Production:</b> Vercel, free tier, auto-deploy from <code>main</code>: <a href="https://draftomatic.vercel.app">draftomatic.vercel.app</a>. Deploy config lives in <code>vercel.json</code>; <code>scripts/finalize_deploy.py</code> bakes the metrics snapshot at build time. Template mode serves on Vercel (serverless cannot reach the laptop's Ollama) by design.</li>
+    <li><b>Rollback:</b> <code>vercel rollback</code> in the project, or revert the offending commit on <code>main</code> &mdash; Vercel redeploys the prior build automatically.</li>
+  </ul>
+  <h3>Secrets &amp; on-call</h3>
+  <ul>
+    <li><b>Secrets handling:</b> no secrets in code, ever. Framer publish API keys and any future tokens live in environment variables; the publish key check failing on a bad key is a <b>tested path</b> (<code>publish with bad key -&gt; failed</code>). The team password vault is 1Password; ask Andrew for invites on day one.</li>
+    <li><b>On-call:</b> currently Andrew. If production is down (<a href="https://draftomatic.vercel.app">draftomatic.vercel.app</a> erroring), check <code>vercel logs</code> first, then Vercel status; if the local demo server is down, restart with <code>launchctl kickstart -k gui/$(id -u) com.draftomatic.server</code> and verify with <code>curl -s localhost:8765/api/health</code>.</li>
+    <li><b>Demo data resets are a deploy risk:</b> never hand-edit files under <code>data/</code> &mdash; always through the API so the state file and metrics stay consistent.</li>
+    <li><b>Repo map:</b> <code>server.py</code> (HTTP + endpoints) &middot; <code>store.py</code> (state) &middot; <code>content.py</code> (template engine) &middot; <code>llm.py</code> (Ollama client) &middot; <code>topics_gen.py</code> &middot; <code>metrics.py</code> (event log + funnel aggregation) &middot; <code>test_draftomatic.py</code> &middot; <code>scripts/</code>.</li>
+  </ul>
+</section>
+
+</main>
+<footer>Draftomatic &middot; internal playbook &middot; auto-generated with AI, reviewed and edited by Andrew Hogge &middot; last verified Oct 10, 2026</footer>
+</body>
+</html>
