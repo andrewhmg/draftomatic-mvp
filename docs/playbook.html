@@ -159,7 +159,7 @@ python3 server.py                 # serves http://127.0.0.1:8765</code></pre>
   <div class="sub">Ruff lint gate &mdash; configured in the repo, enforced before every commit.</div>
   <ul>
     <li><b>Linter:</b> <code>ruff</code> with the repo's <code>ruff.toml</code> &mdash; rule sets <code>E</code> (pycodestyle errors), <code>F</code> (pyflakes), <code>W</code> (warnings); <code>line-length = 120</code>; <code>target-version = "py311"</code>; <code>E501</code> (long lines) ignored for HTML/SVG template literals.</li>
-    <li><b>Enforcement:</b> a <b>pre-commit hook</b> (`.git/hooks/pre-commit`, installed with the clone via <code>scripts/install-hooks.sh</code>) runs <code>ruff check .</code> and <b>blocks the commit</b> on any finding. Fix with <code>ruff check . --fix</code>.</li>
+    <li><b>Enforcement:</b> a <b>pre-commit hook</b> (run <code>scripts/install-hooks.sh</code> once after cloning &mdash; git does not ship hooks with a clone) runs <code>ruff check .</code> and <b>blocks the commit</b> on any finding. Fix with <code>ruff check . --fix</code>.</li>
     <li><b>Formatting:</b> ruff's formatter profile, 120 cols &mdash; same tool does lint and format, so one config, one gate.</li>
     <li><b>Vulnerability scanning:</b> stdlib-only means no third-party runtime deps to audit; dependencies are dev-only (<code>ruff</code>) and checked with <code>python3 -m pip install ruff &amp;&amp; ruff check .</code> fresh each release. The attack surface we guard instead is input handling: publish keys are validated and a bad key is a tested failure path, not a crash.</li>
   </ul>
